@@ -6,11 +6,16 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # Load player animation frames
-        player_walk1 = pygame.image.load('graphics\Player\player_walk_1.png').convert_alpha()
-        player_walk2 = pygame.image.load('graphics\Player\player_walk_2.png').convert_alpha()
+        player_walk1 = pygame.image.load('graphics\Player/alienGreen_walk1.png').convert_alpha()
+        player_walk1 = pygame.transform.scale(player_walk1, (64,84))
+        player_walk2 = pygame.image.load('graphics\Player/alienGreen_walk2.png').convert_alpha()
+        player_walk2 = pygame.transform.scale(player_walk2, (64,84))
         self.player_walk = [player_walk1,player_walk2]
         self.player_index = 0
-        self.player_jump = pygame.image.load('graphics\Player\jump.png').convert_alpha()
+        self.player_jump = pygame.image.load('graphics\Player/alienGreen_jump.png').convert_alpha()
+        self.player_jump = pygame.transform.scale(self.player_jump, (64, 84))
+        self.player_duck = pygame.image.load('graphics\Player/alienGreen_duck.png').convert_alpha()
+        self.player_duck = pygame.transform.scale(self.player_duck, (64, 42))
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom = (200, 300))
         self.gravity = 0
@@ -33,6 +38,10 @@ class Player(pygame.sprite.Sprite):
         # Jump animation when above ground
         if self.rect.bottom < 300:
             self.image = self.player_jump
+        # Duck animation when down arrow pressed
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_DOWN] and self.rect.bottom >= 300:
+            self.image = self.player_duck
         # Walk animation
         else:
             self.player_index += 0.1 # Increment animation by .1 per frame
@@ -138,8 +147,8 @@ bgm.play(loops = -1)
 
 # Intro screen
 # Player image
-player_stand = pygame.image.load('graphics\Player\player_stand.png').convert_alpha()
-player_stand = pygame.transform.rotozoom(player_stand, 0, 2)
+player_stand = pygame.image.load('graphics/Player/alienGreen_front.png').convert_alpha()
+#player_stand = pygame.transform.rotozoom(player_stand, 0, 2)
 player_stand_rectangle = player_stand.get_rect(center = (400,200))
 # Game Name
 game_name = font.render('Runner Game', False, (111,196,169))
