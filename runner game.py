@@ -35,19 +35,23 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = 300
     
     def animation_state(self):
+        keys = pygame.key.get_pressed()
         # Jump animation when above ground
         if self.rect.bottom < 300:
             self.image = self.player_jump
         # Duck animation when down arrow pressed
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_DOWN] and self.rect.bottom >= 300:
+        elif keys[pygame.K_DOWN] and self.rect.bottom >= 300:
             self.image = self.player_duck
+            self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+            self.rect.height = 42  # Adjust the height for ducking
         # Walk animation
         else:
-            self.player_index += 0.1 # Increment animation by .1 per frame
+            self.player_index += 0.1  # Increment animation by .1 per frame
             if self.player_index >= len(self.player_walk):
-                self.player_index = 0 
+                self.player_index = 0
             self.image = self.player_walk[int(self.player_index)]
+            self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+            self.rect.height = 84  # Reset the height when not ducking
 
     def update(self):
         self.player_input()
@@ -61,13 +65,17 @@ class Obstacle(pygame.sprite.Sprite):
         
         # Load animations
         if obstacle_type == 'fly':
-            fly1 = pygame.image.load('graphics\Fly\Fly1.png').convert_alpha()
-            fly2 = pygame.image.load('graphics\Fly\Fly2.png').convert_alpha()
+            fly1 = pygame.image.load('graphics\Fly/fly.png').convert_alpha()
+            fly1 = pygame.transform.scale_by(fly1,  0.5)
+            fly2 = pygame.image.load('graphics\Fly/fly_dead.png').convert_alpha()
+            fly2 = pygame.transform.scale_by(fly2, 0.5)
             self.frames = [fly1, fly2]
-            y_pos = 210 # Flys fly
+            y_pos = 240 # Flys fly
         elif obstacle_type == 'snail':
-            snail1 = pygame.image.load('graphics\snail\snail1.png').convert_alpha()
-            snail2 = pygame.image.load('graphics\snail\snail2.png').convert_alpha()
+            snail1 = pygame.image.load('graphics\snail/snail.png').convert_alpha()
+            snail1 = pygame.transform.scale_by(snail1, 0.5)
+            snail2 = pygame.image.load('graphics\snail\snail_move.png').convert_alpha()
+            snail2 = pygame.transform.scale_by(snail2, 0.5)
             self.frames = [snail1, snail2]
             y_pos = 300 # Snails crawl(slither?)
         
